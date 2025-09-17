@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.SQLRestriction;
 
 @Entity
-@Table(name = "Cliente")
+@Table(name = "Produto")
 @SQLRestriction("habilitado = true")
 @Builder
 @Getter
