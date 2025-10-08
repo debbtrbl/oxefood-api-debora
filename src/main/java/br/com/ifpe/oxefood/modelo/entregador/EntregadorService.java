@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.ifpe.oxefood.modelo.empresa.EmpresaService;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -13,8 +14,12 @@ public class EntregadorService {
     @Autowired
     private EntregadorRepository repository;
 
+    @Autowired
+    private EmpresaService empresaService;
+
     @Transactional
     public Entregador save(Entregador entregador) {
+        
 
         entregador.setHabilitado(Boolean.TRUE); // habilita o entregador por padrão
         return repository.save(entregador); // insere no banco de dados

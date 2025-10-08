@@ -33,6 +33,7 @@ public class EntregadorRequest {
     private String enderecoCep;
     private String enderecoUf;
     private boolean ativo;
+    private Long idEmpresa;
 
     public Entregador build() {
         return Entregador.builder()

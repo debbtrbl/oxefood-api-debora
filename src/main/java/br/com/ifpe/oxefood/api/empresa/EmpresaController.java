@@ -1,4 +1,4 @@
-package br.com.ifpe.oxefood.api.entregador;
+package br.com.ifpe.oxefood.api.empresa;
 
 import java.util.List;
 
@@ -15,47 +15,45 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.ifpe.oxefood.modelo.entregador.Entregador;
-import br.com.ifpe.oxefood.modelo.entregador.EntregadorService;
+import br.com.ifpe.oxefood.modelo.empresa.Empresa;
+import br.com.ifpe.oxefood.modelo.empresa.EmpresaService;
 
 @RestController
-@RequestMapping("/api/entregador")
+@RequestMapping("/api/empresa")
 @CrossOrigin
-public class EntregadorController {
-
+public class EmpresaController {
     @Autowired
-    private EntregadorService entregadorService;
+    private EmpresaService empresaService;
 
     @PostMapping
-    public ResponseEntity<Entregador> save(@RequestBody EntregadorRequest request) {
+    public ResponseEntity<Empresa> save(@RequestBody EmpresaRequest request) {
 
-        Entregador entregador = entregadorService.save(request.build());
-        return new ResponseEntity<Entregador>(entregador, HttpStatus.CREATED);
+        Empresa empresa = empresaService.save(request.build());
+        return new ResponseEntity<Empresa>(empresa, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public List<Entregador> listarTodos() {
-        return entregadorService.listarTodos();
+    public List<Empresa> listarTodos() {
+        return empresaService.listarTodos();
     }
 
     @GetMapping("/{id}")
-    public Entregador obterPorID(@PathVariable Long id) {
-        return entregadorService.obterPorID(id);
+    public Empresa obterPorID(@PathVariable Long id) {
+        return empresaService.obterPorID(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Entregador> update(@PathVariable("id") Long id, @RequestBody EntregadorRequest request) {
+    public ResponseEntity<Empresa> update(@PathVariable("id") Long id, @RequestBody EmpresaRequest request) {
 
-        entregadorService.update(id, request.build());
+        empresaService.update(id, request.build());
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 
-       entregadorService.delete(id);
+       empresaService.delete(id);
        return ResponseEntity.ok().build();
    }
-
 
 }
