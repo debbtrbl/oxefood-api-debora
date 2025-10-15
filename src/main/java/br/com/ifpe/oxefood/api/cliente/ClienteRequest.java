@@ -1,13 +1,17 @@
 package br.com.ifpe.oxefood.api.cliente;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import br.com.ifpe.oxefood.modelo.acesso.Perfil;
+import br.com.ifpe.oxefood.modelo.acesso.Usuario;
 import br.com.ifpe.oxefood.modelo.cliente.Cliente;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -42,9 +46,27 @@ public class ClienteRequest {
     @Length(min = 8, max = 20, message = "O campo telefone fixo tem que ter entre {min} e {max} caracteres")
     private String foneFixo;
 
+    @NotBlank(message = "O e-mail é de preenchimento obrigatório")
+    @Email
+    private String email;
+
+    @NotBlank(message = "A senha é de preenchimento obrigatório")
+    private String password;
+
+    public Usuario buildUsuario() {
+       return Usuario.builder()
+           .username(email)
+           .password(password)
+           .roles(Arrays.asList(new Perfil(Perfil.ROLE_CLIENTE)))
+           .build();
+   }
+
+
+
     public Cliente build() {
 
         return Cliente.builder() // instanciando um objeto da classe Cliente
+                .usuario(buildUsuario())
                 .nome(nome)
                 .dataNascimento(dataNascimento)
                 .cpf(cpf)
