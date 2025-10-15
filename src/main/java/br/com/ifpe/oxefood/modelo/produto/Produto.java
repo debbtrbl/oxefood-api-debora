@@ -28,22 +28,22 @@ public class Produto extends EntidadeAuditavel  {
    @ManyToOne(fetch = FetchType.EAGER)
    private CategoriaProduto categoria;
   
-   @Column
+   @Column(nullable = false, length = 10, unique = true)
    private String codigo;
 
-   @Column
+   @Column(nullable = false, length = 100)
    private String titulo;
 
    @Column
    private String descricao;
 
-   @Column
+   @Column(nullable = false)
    private double valorUnitario;
 
-   @Column
+   @Column(nullable = false)
    private int tempoEntregaMinimo;
 
-   @Column
+   @Column(nullable = false)
    private int tempoEntregaMaximo;
 
 }
