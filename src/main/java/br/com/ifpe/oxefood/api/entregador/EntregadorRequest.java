@@ -69,10 +69,8 @@ public class EntregadorRequest {
     @NotBlank(message = "O CEP é de preenchimento obrigatório")
     private String enderecoCep;
 
-    @NotBlank(message = "O UF é de preenchimento obrigatório")
     private String enderecoUf;
 
-    @NotBlank(message = "O status de atividade é de preenchimento obrigatório")
     private boolean ativo;
 
     public Entregador build() {

@@ -28,7 +28,6 @@ public class ClienteRequest {
     @Length(max = 100, message = "O nome deverá ter no máximo {max} caracteres")
     private String nome;
 
-    @NotBlank(message = "A data de nascimento é de preenchimento obrigatório")
     @Past(message = "A data de nascimento deve ser uma data passada")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;

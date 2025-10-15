@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.ifpe.oxefood.util.exception.ClienteException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -19,6 +20,10 @@ public class ClienteService {
     
    @Transactional
    public Cliente save(Cliente cliente) {
+
+         if (!cliente.getFoneCelular().startsWith("(81)")) {
+              throw new ClienteException(ClienteException.MSG_PREFIXO_DDD);
+         }
 
        cliente.setHabilitado(Boolean.TRUE); // habilita o cliente por padrão
        return repository.save(cliente); // insere no banco de dados
