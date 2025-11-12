@@ -18,8 +18,8 @@ public class ProdutoService {
     public Produto save(Produto produto) {
 
         if (produto.getValorUnitario() < 20 || produto.getValorUnitario() > 100) {
-            throw new ProdutoException(ProdutoException.MSG_VALOR_MIN_MAX_PRODUTO); 
-        } 
+            throw new ProdutoException(ProdutoException.MSG_VALOR_MIN_MAX_PRODUTO);
+        }
 
         produto.setHabilitado(Boolean.TRUE); // habilita o produto por padrão
         return repository.save(produto); // insere no banco de dados
@@ -56,5 +56,47 @@ public class ProdutoService {
 
         repository.save(produto);
     }
+
+    public List<Produto> filtrar(String codigo, String titulo, Long idCategoria) {
+
+    // Se nenhum filtro foi informado, retorna todos
+    if ((codigo == null || codigo.trim().isEmpty()) &&
+        (titulo == null || titulo.trim().isEmpty()) && 
+        (idCategoria == null)) {
+        return repository.findAll();
+    }
+
+    // Filtro apenas por código
+    if (codigo != null && !codigo.trim().isEmpty() && 
+        (titulo == null || titulo.trim().isEmpty()) && 
+        idCategoria == null) {
+        return repository.consultarPorCodigo(codigo);
+    }
+
+    // Filtro apenas por título
+    if ((codigo == null || codigo.trim().isEmpty()) &&
+        titulo != null && !titulo.trim().isEmpty() && 
+        idCategoria == null) {
+        return repository.findByTituloContainingIgnoreCaseOrderByTituloAsc(titulo);
+    }
+
+    // Filtro apenas por categoria
+    if ((codigo == null || codigo.trim().isEmpty()) &&
+        (titulo == null || titulo.trim().isEmpty()) && 
+        idCategoria != null) {
+        return repository.consultarPorCategoria(idCategoria);
+    }
+
+    // Filtro por título E categoria
+    if ((codigo == null || codigo.trim().isEmpty()) &&
+        titulo != null && !titulo.trim().isEmpty() && 
+        idCategoria != null) {
+        return repository.consultarPorTituloECategoria(titulo, idCategoria);
+    }
+
+    // Para outros casos de combinação de filtros, retorna vazio 
+    // ou implemente mais métodos no repository conforme necessidade
+    return List.of();
+}
 
 }

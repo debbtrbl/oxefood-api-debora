@@ -10,6 +10,7 @@ import br.com.ifpe.oxefood.modelo.acesso.Perfil;
 import br.com.ifpe.oxefood.modelo.acesso.PerfilRepository;
 import br.com.ifpe.oxefood.modelo.acesso.Usuario;
 import br.com.ifpe.oxefood.modelo.acesso.UsuarioService;
+import br.com.ifpe.oxefood.modelo.mensagens.EmailService;
 import br.com.ifpe.oxefood.util.exception.ClienteException;
 import jakarta.transaction.Transactional;
 
@@ -28,6 +29,10 @@ public class ClienteService {
     @Autowired
     private EnderecoClienteRepository enderecoClienteRepository;
 
+    @Autowired
+    private EmailService emailService;
+
+
     @Transactional
     public Cliente save(Cliente cliente, Usuario usuarioLogado) {
 
@@ -44,7 +49,12 @@ public class ClienteService {
 
         cliente.setHabilitado(Boolean.TRUE); // habilita o cliente por padrão
         cliente.setCriadoPor(usuarioLogado);
-        return repository.save(cliente); // insere no banco de dados
+        Cliente clienteSalvo = repository.save(cliente); // insere no banco de dados
+
+        // Envia email de confirmação de cadastro
+        emailService.enviarEmailConfirmacaoCadastroCliente(clienteSalvo);
+
+        return clienteSalvo;
     }
 
     public List<Cliente> listarTodos() {

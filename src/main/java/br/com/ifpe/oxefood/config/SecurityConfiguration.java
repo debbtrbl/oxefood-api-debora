@@ -63,6 +63,22 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api-docs/*").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/*").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/api/categoriaproduto").hasAnyAuthority(
+                                Perfil.ROLE_CLIENTE,
+                                Perfil.ROLE_FUNCIONARIO_ADMIN,
+                                Perfil.ROLE_FUNCIONARIO_USER) // Consulta de categoria produto
+
+                        .requestMatchers(HttpMethod.POST, "/api/categoriaproduto").hasAnyAuthority(
+                                Perfil.ROLE_FUNCIONARIO_ADMIN,
+                                Perfil.ROLE_FUNCIONARIO_USER) // Cadastro de categoria produto
+
+                        .requestMatchers(HttpMethod.PUT, "/api/categoriaproduto/*").hasAnyAuthority(
+                                Perfil.ROLE_FUNCIONARIO_ADMIN,
+                                Perfil.ROLE_FUNCIONARIO_USER) // Alteração de categoria produto
+
+                        .requestMatchers(HttpMethod.DELETE, "/api/categoriaproduto/*").hasAnyAuthority(
+                                Perfil.ROLE_FUNCIONARIO_ADMIN) // Exclusão de categoria produto
+
                         .anyRequest().authenticated()
 
                 )
