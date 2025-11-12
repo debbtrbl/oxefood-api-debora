@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import br.com.ifpe.oxefood.util.Util;
 import br.com.ifpe.oxefood.util.exception.ProdutoException;
 import jakarta.transaction.Transactional;
 
@@ -59,44 +61,58 @@ public class ProdutoService {
 
     public List<Produto> filtrar(String codigo, String titulo, Long idCategoria) {
 
-    // Se nenhum filtro foi informado, retorna todos
-    if ((codigo == null || codigo.trim().isEmpty()) &&
-        (titulo == null || titulo.trim().isEmpty()) && 
-        (idCategoria == null)) {
-        return repository.findAll();
+        // Se nenhum filtro foi informado, retorna todos
+        if ((codigo == null || codigo.trim().isEmpty()) &&
+                (titulo == null || titulo.trim().isEmpty()) &&
+                (idCategoria == null)) {
+            return repository.findAll();
+        }
+
+        // Filtro apenas por código
+        if (codigo != null && !codigo.trim().isEmpty() &&
+                (titulo == null || titulo.trim().isEmpty()) &&
+                idCategoria == null) {
+            return repository.consultarPorCodigo(codigo);
+        }
+
+        // Filtro apenas por título
+        if ((codigo == null || codigo.trim().isEmpty()) &&
+                titulo != null && !titulo.trim().isEmpty() &&
+                idCategoria == null) {
+            return repository.findByTituloContainingIgnoreCaseOrderByTituloAsc(titulo);
+        }
+
+        // Filtro apenas por categoria
+        if ((codigo == null || codigo.trim().isEmpty()) &&
+                (titulo == null || titulo.trim().isEmpty()) &&
+                idCategoria != null) {
+            return repository.consultarPorCategoria(idCategoria);
+        }
+
+        // Filtro por título E categoria
+        if ((codigo == null || codigo.trim().isEmpty()) &&
+                titulo != null && !titulo.trim().isEmpty() &&
+                idCategoria != null) {
+            return repository.consultarPorTituloECategoria(titulo, idCategoria);
+        }
+
+        // Para outros casos de combinação de filtros, retorna vazio
+        // ou implemente mais métodos no repository conforme necessidade
+        return List.of();
     }
 
-    // Filtro apenas por código
-    if (codigo != null && !codigo.trim().isEmpty() && 
-        (titulo == null || titulo.trim().isEmpty()) && 
-        idCategoria == null) {
-        return repository.consultarPorCodigo(codigo);
-    }
+    @Transactional
+    public Produto saveImage(Long id, MultipartFile imagem) {
 
-    // Filtro apenas por título
-    if ((codigo == null || codigo.trim().isEmpty()) &&
-        titulo != null && !titulo.trim().isEmpty() && 
-        idCategoria == null) {
-        return repository.findByTituloContainingIgnoreCaseOrderByTituloAsc(titulo);
-    }
+        Produto produto = obterPorID(id);
 
-    // Filtro apenas por categoria
-    if ((codigo == null || codigo.trim().isEmpty()) &&
-        (titulo == null || titulo.trim().isEmpty()) && 
-        idCategoria != null) {
-        return repository.consultarPorCategoria(idCategoria);
-    }
+        String imagemUpada = Util.fazerUploadImagem(imagem);
 
-    // Filtro por título E categoria
-    if ((codigo == null || codigo.trim().isEmpty()) &&
-        titulo != null && !titulo.trim().isEmpty() && 
-        idCategoria != null) {
-        return repository.consultarPorTituloECategoria(titulo, idCategoria);
-    }
+        if (imagemUpada != null) {
+            produto.setImagem(imagemUpada);
+        }
 
-    // Para outros casos de combinação de filtros, retorna vazio 
-    // ou implemente mais métodos no repository conforme necessidade
-    return List.of();
-}
+        return save(produto);
+    }
 
 }
